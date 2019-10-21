@@ -1,0 +1,97 @@
+<html>
+    <head>
+        <title>Дискретная нечеткая логика</title>
+    </head>
+    <body>
+        <p>Если А - A1, то B - B1</p>
+        <p>Если А - A2, то B - B2</p>
+        A1 <input type="text" id="prob_a1" 
+        value="0,0,0.1,0.4,1">
+        <br>
+        <br>
+        A2 <input type="text" id="prob_a2"
+        value="1,1,0.6,0.2,0">
+        <br>
+        <br>
+        B1 <input type="text" id="prob_b1"
+        value="0,0,0.1,0.6,0.8,1">
+        <br>
+        <br>
+        B2 <input type="text" id="prob_b2"
+        value="1,1,1,0.6,0.3,0">
+        <br>
+        <br>
+        Поступило <input type="text" id="enter"  value=3>
+        <br>
+        <br>
+        <button onclick="calculate()">Расcчитать</button>
+        <br>
+        <br>
+        <p id="result"></p>
+
+        <script>
+        function calculate()
+        {
+            a1 = document.getElementById("prob_a1").value.split(",")
+            a2 = document.getElementById("prob_a2").value.split(",")
+
+            b1 = document.getElementById("prob_b1").value.split(",")
+            b2 = document.getElementById("prob_b2").value.split(",")
+
+            entered = document.getElementById("enter").value
+            
+            confidence_a1 = a1[entered-1]
+            shaved_b1 = []
+            for (var i = 0; i < b1.length; i++)
+            {
+                if (b1[i] >= confidence_a1)
+                {
+                    shaved_b1.push(confidence_a1)
+                }
+                else
+                {
+                    shaved_b1.push(b1[i])
+                }
+                
+            }
+
+            confidence_a2 = a2[entered-1]
+            shaved_b2 = []
+            for (var i = 0; i < b2.length; i++)
+            {
+                if (b2[i] >= confidence_a2)
+                {
+                    shaved_b2.push(confidence_a2)
+                }
+                else
+                {
+                    shaved_b2.push(b2[i])
+                }
+                
+            }
+
+
+            //Импликация
+            final = []
+            for (var i = 0; i < b2.length; i++)
+            {
+                pair = [parseFloat(shaved_b1[i]), parseFloat(shaved_b2[i])]
+                max = Math.max(...pair)
+                final.push(max)
+            }
+
+            upper = 0
+            down = 0
+            for (var i = 0; i < final.length; i++)
+            {
+                upper += final[i]*(i+1)
+                down += final[i]
+            }
+
+            document.getElementById("result").innerHTML = "Ответ: " + (upper/down).toFixed(2)
+
+        }
+        </script>
+
+    </body>
+</html>
